@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func is_game_good(game [][]string) bool {
+func is_game_good_p1(game [][]string) (bool) {
 	red := 12
 	green := 13
 	blue := 14
@@ -40,6 +40,38 @@ func is_game_good(game [][]string) bool {
 	return true
 }
 
+func max_cubes_p2(game [][]string) int {
+	maxred := -1
+	maxgreen := -1
+	maxblue := -1
+
+	for _, d := range game {
+		i := 0
+		for i < len(d) {
+			switch d[i+1] {
+			case "red":
+				reddrawn, _ := strconv.Atoi(d[i])
+				if reddrawn > maxred {
+					maxred = reddrawn
+				}
+			case "green":
+				greendrawn, _ := strconv.Atoi(d[i])
+				if greendrawn > maxgreen {
+					maxgreen = greendrawn
+				}
+			case "blue":
+				bluedrawn, _ := strconv.Atoi(d[i])
+				if bluedrawn > maxblue {
+					maxblue = bluedrawn
+				}
+			}
+			i += 2
+		}
+	}
+
+	return maxred * maxgreen * maxblue
+}
+
 func main() {
 	file, err := os.Open("input.txt")
 	if err != nil {
@@ -50,6 +82,7 @@ func main() {
 	scanner := bufio.NewScanner(file)
 	gameid := 1
 	idtotal := 0
+	maxtotal := 0
 	for scanner.Scan() {
 		line := scanner.Text()
 		var game [][]string
@@ -62,13 +95,16 @@ func main() {
 			game = append(game, strings.Split(d, " "))
 		}
 
-		if is_game_good(game) {
+		if is_game_good_p1(game) {
 			idtotal += gameid
 		}
+
+		maxtotal += max_cubes_p2(game)
 
 		gameid++
 	}
 
-	fmt.Println(idtotal)
+	fmt.Println("Result 1:", idtotal)
+	fmt.Println("Result 1:", maxtotal)
 
 }
