@@ -41,6 +41,13 @@ func find_next_val(nums []int) int {
     return nums[len(nums)-1] + find_next_val(diff_arr(nums))
 }
 
+func find_prev_val(nums []int) int {
+    if all_zeros(nums) {
+        return 0
+    }
+    return nums[0] - find_prev_val(diff_arr(nums))
+}
+
 func main() {
     file, err := os.Open("input.txt")
     if err != nil {
@@ -50,10 +57,13 @@ func main() {
 
     scanner := bufio.NewScanner(file)
     next_val := 0
+    prev_val := 0
     for scanner.Scan() {
         line := scanner.Text()
         nums := to_int_array(strings.Fields(line))
         next_val += find_next_val(nums)
+        prev_val += find_prev_val(nums)
     }
     fmt.Println("Result 1:", next_val)
+    fmt.Println("Result 2:", prev_val)
 }
